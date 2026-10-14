@@ -1,0 +1,310 @@
+.gwc-publish-warning,
+.gwc-panel,
+.gwc-popover {
+    color: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.gwc-panel {
+    min-width: 0;
+}
+.gwc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.gwc-card {
+    overflow-wrap: anywhere;
+}
+.gwc-card + .gwc-card {
+    margin-top: 10px;
+}
+.gwc-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.gwc-muted {
+    color: var(--theme-color-gray-600);
+}
+.gwc-quote {
+    margin: 10px 0;
+    padding-left: 10px;
+    border-left: 3px solid var(--theme-color-gray-400);
+    font-weight: 500;
+    white-space: pre-wrap;
+}
+.gwc-suggestions {
+    margin-top: 12px;
+    display: grid;
+    gap: 10px;
+}
+.gwc-suggestion {
+    background: var(--theme-color-gray-100);
+    border-radius: 6px;
+    padding: 8px;
+}
+.gwc-suggestion p {
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+}
+.gwc-doc-link {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: underline;
+}
+.gwc-error {
+    margin: 10px 0;
+    color: var(--color-red-700);
+}
+.gwc-popover {
+    position: fixed;
+    z-index: 10000;
+    width: min(360px, calc(100vw - 16px));
+    max-height: min(70vh, 480px);
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--theme-color-content-bg);
+    border: 1px solid var(--theme-color-gray-400);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px #0003;
+}
+.gwc-popover > button {
+    margin-bottom: 8px;
+}
+.gwc-mark {
+    background: var(--gwc-mark-tint);
+    border-bottom: 1px solid var(--gwc-mark-color);
+    cursor: pointer;
+}
+.gwc-mark:hover,
+.gwc-mark--active {
+    background: var(--gwc-mark-hover);
+    border-bottom-color: var(--gwc-mark-hover-color);
+}
+.gwc-mark--high {
+    --gwc-mark-color: var(--color-red-600);
+    --gwc-mark-hover-color: var(--color-red-700);
+    --gwc-mark-tint: var(--color-red-100);
+    --gwc-mark-hover: var(--color-red-200);
+}
+.gwc-mark--medium {
+    --gwc-mark-color: var(--color-amber-700);
+    --gwc-mark-hover-color: var(--color-amber-800);
+    --gwc-mark-tint: var(--color-amber-100);
+    --gwc-mark-hover: var(--color-amber-200);
+}
+
+.dark .gwc-popover {
+    background: var(--theme-color-gray-850);
+    border-color: var(--theme-color-gray-600);
+}
+.dark .gwc-suggestion {
+    background: var(--theme-color-gray-700);
+}
+.dark .gwc-muted {
+    color: var(--theme-color-gray-300);
+}
+.dark .gwc-error {
+    color: var(--color-red-300);
+}
+.dark .gwc-mark--high {
+    --gwc-mark-color: var(--color-red-400);
+    --gwc-mark-hover-color: var(--color-red-300);
+    --gwc-mark-tint: var(--color-red-950);
+    --gwc-mark-hover: var(--color-red-900);
+}
+.dark .gwc-mark--medium {
+    --gwc-mark-color: var(--color-amber-400);
+    --gwc-mark-hover-color: var(--color-amber-300);
+    --gwc-mark-tint: var(--color-amber-950);
+    --gwc-mark-hover: var(--color-amber-900);
+}
+
+.gwc-inline {
+    color: var(--theme-color-gray-850);
+    background: var(--theme-color-gray-50);
+    border: 1px solid var(--theme-color-gray-300);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    min-width: 0;
+}
+.gwc-inline-toggle,
+.gwc-inline-summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    text-align: left;
+    padding: 7px 0;
+    cursor: pointer;
+}
+.gwc-inline-toggle {
+    padding: 0;
+    font-weight: 600;
+}
+.gwc-inline-list {
+    padding: 0;
+    margin-top: 10px;
+}
+.gwc-inline-summary:hover {
+    background: var(--theme-color-gray-100);
+    border-radius: 4px;
+}
+.gwc-inline-category {
+    max-width: 50%;
+    flex-shrink: 0;
+}
+.gwc-inline-category,
+.gwc-inline-quote {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.gwc-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+.gwc-dot--high {
+    background: var(--color-red-600);
+}
+.gwc-dot--medium {
+    background: var(--color-amber-700);
+}
+.gwc-inline .gwc-card {
+    margin: 4px;
+    font-size: 13px;
+}
+.gwc-inline :focus-visible,
+.gwc-mark:focus-visible {
+    outline: 2px solid var(--theme-color-focus-outline);
+    outline-offset: 2px;
+}
+.dark .gwc-inline {
+    color: var(--theme-color-gray-100);
+    background: var(--theme-color-gray-850);
+    border-color: var(--theme-color-gray-600);
+}
+.dark .gwc-inline-summary:hover {
+    background: var(--theme-color-gray-700);
+}
+.dark .gwc-dot--high {
+    background: var(--color-red-400);
+}
+.dark .gwc-dot--medium {
+    background: var(--color-amber-400);
+}
+
+.gwc-inline-host {
+    margin-top: 8px;
+    min-width: 0;
+}
+.form-group > .gwc-inline-host {
+    /* Publish fields already supply an 8px flex gap; table cells do not. */
+    margin-top: 0;
+}
+
+/* Native Button's slot wrapper must shrink for long review quotes to truncate. */
+.gwc-review-toggle > div {
+    min-width: 0;
+    flex: 1;
+}
+.gwc-tab-counts {
+    display: grid;
+    justify-items: start;
+    margin: 8px 0;
+}
+.gwc-panel .gwc-toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 12px;
+    gap: 8px;
+}
+.gwc-publish-warning .gwc-toolbar {
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.gwc-warning-findings {
+    display: grid;
+    gap: 10px;
+    margin: 12px 0;
+    max-height: 40vh;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+.gwc-warning-findings li {
+    padding: 8px;
+    border-left: 3px solid var(--color-red-600);
+    background: var(--theme-color-gray-50);
+}
+.dark .gwc-warning-findings li {
+    border-color: var(--color-red-400);
+    background: var(--theme-color-gray-850);
+}
+
+.gwc-inline--high {
+    background: color-mix(in srgb, var(--color-rose-100) 35%, var(--theme-color-content-bg));
+    border-color: var(--color-rose-200);
+}
+.gwc-inline--medium {
+    background: color-mix(in srgb, var(--color-amber-100) 35%, var(--theme-color-content-bg));
+    border-color: var(--color-amber-200);
+}
+.gwc-inline-toggle .gwc-dot--high {
+    background: var(--color-rose-700);
+}
+.gwc-inline-toggle .gwc-dot--medium {
+    background: var(--color-amber-700);
+}
+.dark .gwc-inline--high {
+    background: color-mix(in srgb, var(--color-rose-950) 35%, var(--theme-color-gray-850));
+    border-color: var(--color-rose-900);
+}
+.dark .gwc-inline--medium {
+    background: color-mix(in srgb, var(--color-amber-950) 35%, var(--theme-color-gray-850));
+    border-color: var(--color-amber-900);
+}
+.dark .gwc-inline-toggle .gwc-dot--high {
+    background: var(--color-rose-300);
+}
+.dark .gwc-inline-toggle .gwc-dot--medium {
+    background: var(--color-amber-300);
+}
+.gwc-inline--ignored {
+    color: var(--theme-color-gray-600);
+}
+.dark .gwc-inline--ignored {
+    color: var(--theme-color-gray-300);
+}
+.gwc-inline-ignored {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 0;
+}
+.gwc-inline-ignored .gwc-inline-quote {
+    flex: 1;
+}
+
+.gwc-approval {
+    overflow-wrap: anywhere;
+}
+.gwc-approval-record time,
+.gwc-inline-approved time {
+    display: block;
+    font-size: 0.75rem;
+}
+.gwc-inline-approved {
+    overflow-wrap: anywhere;
+    border-top: 1px solid var(--theme-color-content-border);
+    padding: 8px 0;
+}

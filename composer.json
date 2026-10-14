@@ -1,0 +1,61 @@
+{
+    "name": "el-schneider/statamic-greenwashing-checker",
+    "description": "Checks marketing copy for greenwashing risks under EU rules (EmpCo), with German UWG references.",
+    "license": "MIT",
+    "keywords": [
+        "statamic",
+        "statamic-addon",
+        "greenwashing",
+        "uwg",
+        "ai"
+    ],
+    "homepage": "https://github.com/el-schneider/statamic-greenwashing-checker",
+    "support": {
+        "issues": "https://github.com/el-schneider/statamic-greenwashing-checker/issues",
+        "source": "https://github.com/el-schneider/statamic-greenwashing-checker"
+    },
+    "authors": [
+        {
+            "name": "Jonas List",
+            "homepage": "https://github.com/el-schneider"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "statamic/cms": "^5.74 || ^6.20",
+        "prism-php/prism": "^0.99 || ^0.100"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "pestphp/pest": "^3.8 || ^4.3",
+        "pestphp/pest-plugin-laravel": "^3.2 || ^4.0",
+        "laravel/pint": "^1.27"
+    },
+    "autoload": {
+        "psr-4": {
+            "ElSchneider\\GreenwashingChecker\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ElSchneider\\GreenwashingChecker\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Greenwashing Checker",
+            "description": "Checks marketing copy for greenwashing risks under EU rules (EmpCo), with German UWG references."
+        },
+        "laravel": {
+            "providers": [
+                "ElSchneider\\GreenwashingChecker\\ServiceProvider"
+            ]
+        }
+    }
+}

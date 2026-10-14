@@ -1,0 +1,114 @@
+tabs:
+  rules:
+    display: greenwashing-checker::settings.rules
+    sections:
+      - fields:
+          - handle: jurisdiction
+            field:
+              type: select
+              display: greenwashing-checker::settings.jurisdiction
+              instructions: greenwashing-checker::settings.jurisdiction_help
+          - handle: jurisdiction_sites
+            field:
+              type: array
+              display: greenwashing-checker::settings.jurisdiction_sites
+              instructions: greenwashing-checker::settings.jurisdiction_sites_help
+          - handle: substantiations
+            field:
+              type: grid
+              display: greenwashing-checker::settings.substantiations
+              instructions: greenwashing-checker::settings.substantiations_help
+              fields:
+                - handle: scope
+                  field:
+                    type: text
+                    display: greenwashing-checker::settings.scope
+                    instructions: greenwashing-checker::settings.scope_help
+                    validate: required
+                - handle: evidence
+                  field:
+                    type: textarea
+                    display: greenwashing-checker::settings.evidence
+                    instructions: greenwashing-checker::settings.evidence_help
+                    validate: required
+          - handle: threshold
+            field:
+              type: select
+              display: greenwashing-checker::settings.threshold
+              instructions: greenwashing-checker::settings.threshold_help
+              options:
+                all: greenwashing-checker::settings.all_risks
+                high: greenwashing-checker::settings.high_risk
+              validate: required|in:high,all
+          - handle: categories
+            field:
+              type: checkboxes
+              full_width_setting: true
+              display: greenwashing-checker::settings.categories
+              instructions: greenwashing-checker::settings.categories_help
+          - handle: audience
+            field:
+              type: grid
+              display: greenwashing-checker::settings.audience
+              instructions: greenwashing-checker::settings.audience_help
+              fields:
+                - handle: collection
+                  field:
+                    type: collections
+                    display: greenwashing-checker::settings.collection
+                    instructions: greenwashing-checker::settings.collection_help
+                    max_items: 1
+                    validate: required
+                - handle: audience
+                  field:
+                    type: select
+                    display: greenwashing-checker::settings.audience
+                    instructions: greenwashing-checker::settings.audience_row_help
+                    default: b2c
+                    options:
+                      b2c: B2C
+                      b2b: B2B
+                    validate: required|in:b2c,b2b
+          - handle: house_rules
+            field:
+              type: textarea
+              display: greenwashing-checker::settings.house_rules
+              instructions: greenwashing-checker::settings.house_rules_help
+  legal_basis:
+    display: greenwashing-checker::settings.legal_basis
+    sections:
+      - fields: []
+  behaviour:
+    display: greenwashing-checker::settings.behaviour
+    sections:
+      - fields:
+          - handle: collections
+            field:
+              type: select
+              multiple: true
+              display: greenwashing-checker::settings.collections
+              instructions: greenwashing-checker::settings.collections_help
+          - handle: check_on_blur
+            field:
+              type: toggle
+              display: greenwashing-checker::settings.check_on_blur
+              instructions: greenwashing-checker::settings.check_on_blur_help
+          - handle: on_publish
+            field:
+              type: select
+              display: greenwashing-checker::settings.on_publish
+              instructions: greenwashing-checker::settings.on_publish_help
+              options:
+                warn: greenwashing-checker::settings.warn
+                'off': greenwashing-checker::settings.off
+              validate: required|in:warn,off
+          - handle: placement
+            field:
+              type: select
+              display: greenwashing-checker::settings.placement
+              instructions: greenwashing-checker::settings.placement_help
+              options:
+                sidebar: greenwashing-checker::settings.sidebar
+                tab: greenwashing-checker::settings.tab
+                none: greenwashing-checker::settings.manual
+              validate: required|in:sidebar,tab,none
