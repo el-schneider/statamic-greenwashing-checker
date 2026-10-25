@@ -1,96 +1,146 @@
-# Greenwashing Checker — public beta
+# Statamic Greenwashing Checker
 
-AI-assisted checks against EU greenwashing rules for marketing copy in Statamic entries. Directive 2024/825 (EmpCo) amends the Unfair Commercial Practices Directive and applies EU-wide from 27 September 2026. Findings pair EU references with German UWG references and come with explanations and suggested rewrites. The addon flags potential risks; it never establishes compliance, and it is not legal advice.
+> Flags greenwashing risks in Statamic entries while editors write. Covers the EU rules on environmental claims (Directive 2024/825, “EmpCo”), which apply from 27 September 2026.
 
-Requires PHP 8.3+, Statamic 6.20+ (or 5.74, see below) and a Prism-compatible LLM provider, usually a paid API account. UI and prompts support German and English.
+Phrases like “eco-friendly”, “climate-neutral thanks to offsetting” or “100 % green” become per-se violations across the EU under EmpCo. This addon sends entry text to an LLM of your choice. It marks risky claims in the field where they appear, explains the risk and suggests a rewrite that editors can apply with one click.
 
-## Statamic 5
+The addon flags potential risks. It is not legal advice and does not establish compliance.
 
-Statamic 5.74+ works on Laravel 11 or 12 only (Prism requires Laravel 11+; Statamic 5 on Laravel 10 cannot install this addon). Backend analysis, storage, `greenwashing:scan`, and the JSON endpoints are identical. Settings come from the published config file only — Statamic 5 has no addon settings API, so CP-only rules (substantiations, house rules, audience, jurisdiction sites) stay empty. The CP panel is a single sidebar panel with Check/Retry, a status summary, and a Review-all sheet (Statamic 5's own stack component) with the same information design as Statamic 6: open/ignored switcher, compact rows grouped by tab and field, one expanded row at a time with references, suggestions, Apply for top-level text/textarea/markdown fields, Ignore/Show again, and jump-to-field. Bard marks, inline boxes, publish warnings, approvals, and the Inertia utility are Statamic 6 only (a read-only Blade utility lists scan summaries on v5).
+![Findings in the entry editor](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/inline-expanded.png)
 
-## Install
+## Features
 
-Until the package is on Packagist, add the VCS repository to your application's `composer.json`:
+- **Checks while editing**: a sidebar panel checks unsaved text. Findings appear below each affected field, including fields nested in Bard, Replicator, Grid and Group. Risky phrases in Bard are highlighted.
+- **Suggested rewrites**: each finding has one to three replacements. **Apply** replaces only the quoted phrase and keeps the editor’s undo history.
+- **Nine risk categories**, mapped to the EmpCo/UCPD articles. German sites can also show the matching UWG references.
+- **Context-aware**: your real certificates and licences (“substantiations”) and house rules go into the prompt, so documented claims are not flagged. B2B collections skip the consumer-only per-se rules.
+- **Review workflow**: editors can ignore a finding, or approve it with a documented reason (separate permission). Approvals are stored as content files you can commit to Git.
+- **Publish warning**: publishing an entry with open high-risk findings asks for confirmation. It never blocks.
+- **Bulk scans**: scan saved content from the CLI or from a CP utility that ranks entries by risk.
+- **Any Prism provider**: OpenAI, Anthropic, Gemini, Mistral, OpenRouter, Ollama and more, via [Prism](https://prismphp.com). Results are cached per text, so unchanged copy is never sent twice.
+- **German and English** UI. Explanations follow the editor’s CP language; suggested rewrites follow the entry’s language.
 
-```json
-{
-  "repositories": [
-    { "type": "vcs", "url": "git@github.com:el-schneider/statamic-greenwashing-checker.git" }
-  ],
-  "minimum-stability": "dev",
-  "prefer-stable": true
-}
+| Review all findings | Scan saved content |
+| :-- | :-- |
+| ![Review stack](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/stack.png) | ![Scan utility](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/utility.png) |
+
+## Requirements
+
+- PHP 8.3+
+- Statamic 6.20+, or Statamic 5.74+ on Laravel 11/12 with a reduced feature set (see [Statamic 5](#statamic-5))
+- An API key for an LLM provider supported by Prism. Each check is one paid API call.
+
+## Installation
+
+```bash
+composer require el-schneider/statamic-greenwashing-checker
 ```
 
-Private repositories require GitHub SSH access.
+Set a model and its provider key in `.env`. The model string is `<prism-provider>/<model>`:
 
-```sh
-composer require el-schneider/statamic-greenwashing-checker:@dev
-php artisan vendor:publish --tag=greenwashing-checker-config
-php artisan statamic:install
+```dotenv
+GREENWASHING_CHECKER_MODEL=openai/gpt-6-luna
+OPENAI_API_KEY=sk-...
+
+# or, for example, through OpenRouter:
+# GREENWASHING_CHECKER_MODEL=openrouter/openai/gpt-6-luna
+# OPENROUTER_API_KEY=sk-or-...
 ```
 
-Use a cache shared by HTTP processes and queue workers. The `sync` queue works; a separate worker is optional.
+Provider keys come from Prism’s own `config/prism.php`. Until a key is configured, the panel shows a setup notice and nothing is sent.
+
+Open any entry: the **Greenwashing check** panel appears in the sidebar for all collections.
 
 ## Configuration
 
-```dotenv
-GREENWASHING_CHECKER_MODEL=openrouter/openai/gpt-6-luna
-OPENROUTER_API_KEY=your-provider-key
+Editors and admins configure most things in the CP under **Addons → Greenwashing Checker → Settings**:
+
+| Setting | Effect |
+| :-- | :-- |
+| Substantiations | Certificates and licences you hold, with their scope. Claims they cover are not flagged. |
+| House rules | Extra editorial guidance for the model. It cannot switch off the legal checks. |
+| Audience per collection | B2C (default) or B2B. B2B skips the consumer per-se rules and downgrades findings to medium. |
+| Enabled categories | Turn individual risk categories off. |
+| Legal references | `eu` shows EmpCo/UCPD references; `de` adds German UWG references. Can differ per site. |
+| Collections, placement, check on blur, publish warning | Where and when checks run. |
+
+To change the model, timeout or the defaults for these settings, publish the config:
+
+```bash
+php artisan vendor:publish --tag=greenwashing-checker-config
 ```
 
-The default model is `openai/gpt-6-luna` and needs `OPENAI_API_KEY`. The model string splits on its first `/`, so nested OpenRouter names work; Prism reads provider credentials from its own `prism.providers` config. Nothing is sent until a model and its credentials are configured.
+The comments in `config/statamic/greenwashing-checker.php` explain each option. CP settings override the config file.
 
-All other options live in the published `config/statamic/greenwashing-checker.php`: collections, automatic checks, panel placement, publish warnings, categories and the context budget. Analysis rules — substantiations, house rules, audience and jurisdictions — are edited in the control panel under Add-ons → Greenwashing Checker → Settings; CP selections override config defaults.
+### Exclude fields
 
-Displayed legal references come from a jurisdiction pack chosen in CP settings. See [CONTRIBUTING.md](CONTRIBUTING.md) for what packs contain and how to propose one.
-
-Disable checks for a field or an entire container in its blueprint:
+Fields with internal or non-marketing text can opt out in the blueprint. On a Replicator, Grid, Group or Bard field this excludes everything inside it:
 
 ```yaml
-field:
-  type: textarea
-  greenwashing_checker: false
+-
+  handle: internal_notes
+  field:
+    type: textarea
+    greenwashing_checker: false
 ```
 
-## What editors see
+### Panel placement
 
-- The sidebar panel checks unsaved entry text. **Prüfen** (Check) runs the analysis; **Alle durchgehen** (Review all) opens a review stack with open, ignored and approved findings, grouped by field.
-- Each affected field gets an inline box below the input, nested fields and Bard included; open findings in Bard prose also get severity-tinted highlights.
-- **Übernehmen** (Apply) replaces the first matching quote and uses the editor's undo history (Ctrl/Cmd+Z). A changed quote produces an error instead of replacing unrelated text.
-- **Ignorieren** (Ignore) sets a finding aside until the text or the analysis settings change. **Freigeben …** (Approve) records a documented decision; it requires a reason and the `approve greenwashing findings` permission.
-- Leaving a changed field schedules a check after one second (`check_on_blur`). Publishing with HIGH findings, ignored ones included, warns with an explicit publish-anyway action.
+`placement` can be `sidebar` (default), `tab` (separate tab) or `none`. With `none`, add the **Greenwashing Checker** fieldtype to a blueprint where you want the panel.
 
-![Findings sidebar](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/panel.png)
-![Review stack](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/stack.png)
-![Expanded inline findings](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/inline-expanded.png)
+### Customize the prompt
 
-## Scan existing content
+The system and user prompts are Blade views. Publish them to adjust wording or add rules:
 
-```sh
-php please greenwashing:scan --collection=products
+```bash
+php artisan vendor:publish --tag=greenwashing-checker-prompts
 ```
 
-Omit filters to scan all enabled collections and sites. `--dry-run` reports uncached text without provider calls; `--prune` deletes stored analyses that no saved entry references. In the CP, **Utilities → Greenwashing-Check** queues the same analysis and lists entries by open HIGH count; it requires `scan greenwashing findings`.
+Cached results do not notice prompt edits. Delete `storage/statamic/greenwashing-checker/units/` to have all text checked again.
 
-Analysis results are stored in `storage/statamic/greenwashing-checker/` with no expiry; keep the directory out of Git and prune it with `greenwashing:scan --prune`. Approvals are editorial JSON records in `content/greenwashing-checker/approvals/` — include that directory in backups and editorial Git workflows.
+### Permissions
 
-## Data flow and cost
+| Permission | Allows |
+| :-- | :-- |
+| Approve greenwashing findings | Approving findings with a documented reason |
+| Scan existing content for greenwashing | Using the scan utility |
 
-- Entry text is sent to the configured LLM provider on manual checks, on leaving a changed field (`check_on_blur`), and for publish warnings. Set `check_on_blur: false` and `on_publish: off` for manual-only use.
-- Nothing is sent until a model and its credentials are configured. There is no telemetry.
-- The provider receives uncached target text, capped entry context, company substantiations and locale codes. This may include unpublished copy; opt out sensitive fields. Provider retention and processing policies apply.
-- Provider error details may appear in the private application log. Credentials are not added to log context; clients receive fixed error messages.
-- Findings and dismissal metadata (user ID and timestamp) stay in the application's persistent unit store, with no TTL. Tracked job results expire after one hour. Approvals are stored separately as editorial records.
-- Each uncached check makes one structured LLM call. Context incurs tokens too. Costs depend on model and provider pricing; unchanged text reuses cached findings.
+Running a check requires permission to edit the entry.
+
+## Scanning existing content
+
+```bash
+php please greenwashing:scan                      # all enabled collections and sites
+php please greenwashing:scan --collection=products --site=default
+php please greenwashing:scan --dry-run            # count unchecked text, no API calls
+php please greenwashing:scan --prune              # delete stored results no entry uses
+```
+
+The CLI writes explanations in the app locale. The **Utilities → Greenwashing check** page starts the same scan from the CP and lists entries by open high-risk findings. Long scans need a queue worker. The default `sync` queue runs them inline.
+
+## Data, storage and cost
+
+- **What is sent**: the text of changed fields, a capped amount of surrounding entry context (`max_context_chars`), your substantiations and house rules. This can include unpublished copy. Opt out sensitive fields.
+- **When**: on **Check**, one second after an editor leaves a changed field (`check_on_blur`), and on scans. Set `check_on_blur` to `false` for manual-only checks.
+- **Cost**: one structured LLM call per check, for uncached text only. Results are keyed by text and analysis settings, so unchanged copy reuses its findings.
+- **Storage**: results are stored in `storage/statamic/greenwashing-checker/` without expiry. Approvals are stored in `content/greenwashing-checker/approvals/`. Commit and back up approvals like other content.
+- No telemetry. Provider retention policies apply.
+
+## Statamic 5
+
+Statamic 5 has no addon settings API and no Inertia CP. Analysis, caching, the scan command and the review sheet work the same way. These parts are Statamic 6 only:
+
+- CP settings. Configure through the config file instead; substantiations, house rules, audience and per-site references stay empty.
+- Inline field boxes, Bard highlights, publish warnings and approvals. The Statamic 5 panel lives in the sidebar, and **Apply** works on top-level text, textarea and markdown fields.
+- The interactive scan utility. Statamic 5 gets a read-only list; use `greenwashing:scan` to scan.
 
 ## Limitations
 
-- Text fields only. No images, logos, labels or asset text are examined.
-- The model can miss or over-flag claims; truncated context can omit a qualification.
-- Entry text is treated as data in the prompt, but LLM prompt injection remains a risk.
-- No output establishes compliance with EU or national law. The fixed disclaimer is “Automatische Einschätzung, keine Rechtsberatung.” Seek qualified legal advice for publication decisions.
+- Only text is checked. Images, logos and labels in assets are not.
+- The model can miss claims or flag harmless ones. Truncated context can hide a qualification made elsewhere on the page.
+- Entry text is passed to the model as data, but prompt injection remains possible.
+- Legal references cover the EU and Germany. Other national implementations can be contributed, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Support and license
+## License
 
-Community support via https://github.com/el-schneider/statamic-greenwashing-checker/issues. No SLA. MIT license, Jonas List.
+MIT. Support through [GitHub issues](https://github.com/el-schneider/statamic-greenwashing-checker/issues), no SLA.
