@@ -6,7 +6,7 @@
 
 Phrases like “eco-friendly”, “climate-neutral thanks to offsetting” or “100 % green” become per-se violations across the EU under EmpCo. This addon sends entry text to an LLM of your choice. It marks risky claims in the field where they appear, explains the risk and suggests a rewrite that editors can apply with one click.
 
-The addon flags potential risks. It is not legal advice and does not establish compliance.
+The addon is a public beta. It flags potential risks. It is not legal advice and does not establish compliance.
 
 ![Findings in the entry editor](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/screenshots/inline-expanded.png)
 
