@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.0 - 2026-10-25
+
+First public beta. Flags greenwashing risks in Statamic entries under the EU rules on environmental claims (Directive 2024/825, “EmpCo”), which apply from 27 September 2026. Findings are risk hints, not legal advice.
+
+### What's new
+
+- Checks unsaved entry text with any [Prism](https://prismphp.com) provider and shows findings below each affected field, including fields nested in Bard, Replicator, Grid and Group
+- One to three suggested rewrites per finding; **Apply** replaces only the quoted phrase and keeps the editor's undo history
+- Nine risk categories mapped to EmpCo/UCPD articles, with optional German UWG references per site
+- Substantiations, house rules and a B2B audience setting per collection reduce false positives
+- Ignore findings, or approve them with a documented reason; approvals are content files you can commit
+- Publish warning for open high-risk findings that never blocks publishing
+- `greenwashing:scan` command and a CP utility to scan saved content, with a dry run that counts unchecked text
+- Results cached per text, so unchanged copy is never sent twice
+- German and English UI
+- Statamic 6.20+; Statamic 5.74+ on Laravel 11/12 with a reduced panel
+
 ## 0.1.0 - unreleased
 
 - AI-assisted marketing-copy checks under EU greenwashing rules (EmpCo), with German UWG references, explanations and suggested rewrites. Public beta, not legal advice.
