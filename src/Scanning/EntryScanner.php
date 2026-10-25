@@ -86,7 +86,7 @@ final class EntryScanner
         return $this->cache->prune(array_keys($hashes), $dryRun);
     }
 
-    public function scan(EntryContract $entry, string $locale = 'de'): array
+    public function scan(EntryContract $entry, string $locale): array
     {
         $plan = $this->prepare($entry);
         $findings = app(ClaimAnalyzer::class)->analyze($plan['targets'], $plan['context'], $locale, Site::get($entry->locale())->locale(), $plan['rules']);

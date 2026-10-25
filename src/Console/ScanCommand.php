@@ -58,7 +58,8 @@ final class ScanCommand extends Command
                     $totals['characters'] += $characters;
                     $rows[] = [$label, count($plan['hashes']), $uncached, $characters];
                 } else {
-                    $record = $scanner->scan($entry);
+                    // The CLI has no CP user, so explanations follow the app locale.
+                    $record = $scanner->scan($entry, app()->getLocale());
                     $rows[] = [$label, ...array_values($record['counts'])];
                 }
             } catch (Throwable $exception) {

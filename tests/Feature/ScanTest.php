@@ -62,6 +62,16 @@ it('reuses the per-text cache across command reruns and different saved entries'
     $fake->assertCallCount(1);
 });
 
+it('asks for explanations in the app locale on command scans', function () {
+    app()->setLocale('en');
+    $fake = Prism::fake([scanResponse()]);
+    $this->artisan('greenwashing:scan')->assertExitCode(0);
+    $fake->assertRequest(function (array $requests) {
+        $prompt = implode("\n", array_map(fn ($message) => $message->content, collect($requests)->flatten()->last()->systemPrompts()));
+        expect($prompt)->toContain('explanation: 1–2 einfache Sätze auf en,');
+    });
+});
+
 it('continues after an entry fails and exits nonzero while indexing later successful entries', function () {
     $this->entry->set('copy', 42)->save();
     Entry::make()->id('scan-2')->collection('products')->blueprint('product')->locale('default')->slug('valid')->data(['title' => 'Valid', 'copy' => 'Ein nachhaltiges Produkt.'])->save();
