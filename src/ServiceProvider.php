@@ -165,11 +165,13 @@ final class ServiceProvider extends AddonServiceProvider
     {
         // One bundle per major: the v6 entry imports @statamic/cms/* (absent on v5),
         // the v5 entry uses runtime templates against Vue 2.7 and core CP classes.
-        $this->registerVite([
+        // Setting $vite (not calling registerVite directly) also makes core publish
+        // the built assets after `statamic:install`, which runs on composer install.
+        $this->vite = [
             'input' => [self::supportsV6() ? 'resources/js/addon.ts' : 'resources/js/v5/addon.ts'],
             'publicDirectory' => 'resources/dist',
-        ]);
+        ];
 
-        return $this;
+        return parent::bootVite();
     }
 }
