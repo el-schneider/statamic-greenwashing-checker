@@ -136,7 +136,7 @@ Statamic 5 has no addon settings API and no Inertia CP. Analysis, caching, the s
 
 ## Limitations
 
-- Only text is checked. Images, logos and labels in assets are not.
+- Only entry text fields are checked. Assets are not: PDFs such as data sheets or brochures, images, logos and labels can still contain risky claims.
 - The model can miss claims or flag harmless ones. Truncated context can hide a qualification made elsewhere on the page.
 - Entry text is passed to the model as data, but prompt injection remains possible.
 - Legal references cover the EU and Germany. Other national implementations can be contributed, see [CONTRIBUTING.md](CONTRIBUTING.md).
