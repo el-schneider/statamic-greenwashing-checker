@@ -1,3 +1,5 @@
+![Greenwashing Checker](https://raw.githubusercontent.com/el-schneider/statamic-greenwashing-checker/main/images/gwc_banner.png)
+
 # Statamic Greenwashing Checker
 
 > Flags greenwashing risks in Statamic entries while editors write. Covers the EU rules on environmental claims (Directive 2024/825, “EmpCo”), which apply from 27 September 2026.
