@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.1 - 2026-10-25
+
+### What's fixed
+
+- CP pages no longer fail with a missing Vite manifest after a fresh install. The addon now publishes its assets when `statamic:install` runs after `composer install`. Existing v0.1.0 installs can run `php artisan vendor:publish --tag=statamic-greenwashing-checker --force` instead of upgrading.
+
 ## v0.1.0 - 2026-10-25
 
 First public beta. Flags greenwashing risks in Statamic entries under the EU rules on environmental claims (Directive 2024/825, “EmpCo”), which apply from 27 September 2026. Findings are risk hints, not legal advice.
