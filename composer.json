@@ -23,7 +23,7 @@
     "require": {
         "php": "^8.3",
         "statamic/cms": "^5.74 || ^6.20",
-        "prism-php/prism": "^0.99 || ^0.100"
+        "prism-php/prism": "^0.103.0"
     },
     "require-dev": {
         "orchestra/testbench": "^10.0 || ^11.0",
